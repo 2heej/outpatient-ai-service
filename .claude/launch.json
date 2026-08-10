@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "backend",
+      "runtimeExecutable": "backend/.venv/bin/uvicorn",
+      "runtimeArgs": ["--app-dir", "backend", "app.main:app", "--host", "0.0.0.0", "--port", "8000"],
+      "port": 8000
+    },
+    {
+      "name": "frontend-tablet",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "--directory", "frontend/tablet", "8611"],
+      "port": 8611
+    },
+    {
+      "name": "frontend-mobile",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "--directory", "frontend/mobile", "8612"],
+      "port": 8612
+    },
+    {
+      "name": "frontend-dashboard",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "--directory", "frontend/dashboard", "8613"],
+      "port": 8613
+    }
+  ]
+}

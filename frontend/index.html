@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>신경과 재진 외래 AI 문진 — outpatient-ai-service</title>
+    <style>
+      :root {
+        --ivory: #faf7f1;
+        --ink: #2b2b28;
+        --ink-soft: #6b6660;
+        --line: #e7e1d6;
+        --brand: #2f6f6b;
+        --brand-soft: #e6f0ef;
+        --brand-strong: #1f504c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--ivory);
+        color: var(--ink);
+        font-family: "Apple SD Gothic Neo", "Malgun Gothic", system-ui, -apple-system, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 24px;
+      }
+      .wrap {
+        max-width: 560px;
+        width: 100%;
+      }
+      .eyebrow {
+        color: var(--brand);
+        font-weight: 700;
+        font-size: 14px;
+        margin: 0 0 6px;
+      }
+      h1 {
+        font-size: 26px;
+        margin: 0 0 10px;
+      }
+      p.lede {
+        color: var(--ink-soft);
+        margin: 0 0 28px;
+        line-height: 1.6;
+      }
+      .cards {
+        display: grid;
+        gap: 14px;
+      }
+      a.card {
+        display: block;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 20px;
+        text-decoration: none;
+        color: var(--ink);
+      }
+      a.card:hover {
+        border-color: var(--brand);
+        background: var(--brand-soft);
+      }
+      a.card .title {
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--brand-strong);
+      }
+      a.card .desc {
+        font-size: 13px;
+        color: var(--ink-soft);
+        margin-top: 4px;
+      }
+      .footer {
+        margin-top: 28px;
+        font-size: 12px;
+        color: var(--ink-soft);
+      }
+      .footer a {
+        color: var(--brand);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="eyebrow">outpatient-ai-service (2차)</p>
+      <h1>신경과 재진 외래 AI 문진</h1>
+      <p class="lede">
+        NLP 프롬프트 평가로 시작한 outpatient-ai-lab(1차)을 실제 동작하는 풀스택 서비스로 확장한
+        프로젝트입니다. 아래 화면 중 하나를 선택해 실제 접수 흐름을 체험해보세요.
+      </p>
+      <div class="cards">
+        <a class="card" href="/tablet/">
+          <div class="title">접수 태블릿 화면</div>
+          <div class="desc">병원 접수처 태블릿에서 환자/보호자가 직접 작성하는 문진 화면</div>
+        </a>
+        <a class="card" href="/mobile/">
+          <div class="title">모바일 화면</div>
+          <div class="desc">대기실에서 본인 휴대폰으로 이어서 작성하는 문진 화면</div>
+        </a>
+        <a class="card" href="/dashboard/">
+          <div class="title">직원용 접수 현황</div>
+          <div class="desc">제출된 문진을 조회하는 직원 대시보드 (직원 코드 필요)</div>
+        </a>
+      </div>
+      <p class="footer">1차(NLP·프롬프트 평가): <a href="https://github.com/2heej/OPD-LLM">github.com/2heej/OPD-LLM</a></p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>신경과 문진 접수 현황 — 직원용</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <span class="hospital-name">OO병원 신경과</span>
+        <span class="hospital-sub">문진 접수 현황 (직원용)</span>
+        <button type="button" id="logout-btn" class="icon-btn" hidden>로그아웃</button>
+      </header>
+
+      <main id="main" class="main"></main>
+    </div>
+
+    <script>
+      // 배포 시 실제 백엔드 URL로 교체 (예: https://opd-service.onrender.com)
+      window.OPD_API_BASE = "http://localhost:8000";
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>

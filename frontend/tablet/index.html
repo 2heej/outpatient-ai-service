@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>신경과 진료 전 문진 — 접수 태블릿</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="kiosk">
+      <header class="kiosk-header">
+        <span class="hospital-name">OO병원 신경과</span>
+        <span class="hospital-sub">진료 전 문진</span>
+      </header>
+
+      <div class="progress-dots" id="progress-dots" aria-hidden="true"></div>
+
+      <main class="stage" id="stage"></main>
+    </div>
+
+    <script>
+      // 배포 시 실제 백엔드 URL로 교체 (예: https://opd-service.onrender.com)
+      window.OPD_API_BASE = "http://localhost:8000";
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>
