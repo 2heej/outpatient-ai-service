@@ -9,6 +9,16 @@
 LLM이 자유서술 부분을 요약하고 구조화된 선택 항목과 함께 저장해 의료진이 진료 전에 확인할 수
 있게 합니다.
 
+## 라이브 데모
+
+- 환자용 접수 태블릿: https://outpatient-ai-service.vercel.app/tablet/
+- 환자용 모바일: https://outpatient-ai-service.vercel.app/mobile/
+- 직원용 접수 현황 대시보드: https://outpatient-ai-service.vercel.app/dashboard/ (직원 코드: `board`)
+- API: https://outpatient-ai-service.onrender.com/api/health
+
+모든 데이터는 합성 데이터입니다. 백엔드는 무료 티어라 15분 이상 유휴 시 슬립되며, 첫 요청은
+깨어나는 데 몇십 초 걸릴 수 있습니다.
+
 **이 프로젝트가 하지 않는 것** (1차와 동일한 제약을 그대로 유지)
 - 실제 환자 개인정보를 사용하지 않습니다 (합성 데이터만).
 - 진단·처방·치료 계획을 생성하지 않습니다.
