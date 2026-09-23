@@ -11,7 +11,6 @@ const answers = {
   visit_purpose: [],
   symptom_change: null,
   requested_consultation: "",
-  raw_input_text: "",
   document_type: [],
   document_destination: [],
   visit_type: null,
@@ -27,7 +26,6 @@ function buildPayload() {
     visit_purpose: answers.visit_purpose,
     symptom_change: answers.symptom_change,
     requested_consultation: answers.requested_consultation || null,
-    raw_input_text: answers.raw_input_text || null,
     document_type: answers.document_type,
     document_destination: answers.document_destination,
     visit_type: answers.visit_type,
@@ -285,7 +283,6 @@ function screens() {
       ta.value = answers.requested_consultation;
       ta.addEventListener("input", () => {
         answers.requested_consultation = ta.value;
-        answers.raw_input_text = ta.value;
       });
       field.appendChild(ta);
       s.appendChild(field);

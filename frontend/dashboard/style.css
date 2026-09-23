@@ -153,6 +153,15 @@ body {
   margin-left: auto;
 }
 
+.flag-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
 .table-wrap {
   overflow-x: auto;
   border: 1px solid var(--line);
@@ -204,6 +213,11 @@ tbody tr:hover {
 .badge.warn {
   background: #fbe6db;
   color: var(--warn);
+}
+
+.badge.danger {
+  background: #fbe0dd;
+  color: #c0392b;
 }
 
 .empty {

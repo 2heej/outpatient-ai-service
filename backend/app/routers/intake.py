@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
 from app.db import get_db
-from app.llm import generate_summary
+from app.llm import detect_risk, generate_summary
 from app.models import Intake
 from app.rate_limit import limiter, llm_calls_allowed
 from app.schemas import IntakeListItem, IntakeResponse, IntakeSubmission
@@ -52,6 +52,7 @@ async def submit_intake(
         raw_answers=submission.model_dump(),
         llm_model=llm_model,
         fallback_used=fallback_used,
+        flagged_for_review=detect_risk((submission.requested_consultation or "").strip()),
     )
     db.add(intake)
     await db.commit()
@@ -62,6 +63,7 @@ async def submit_intake(
 @router.get("", response_model=list[IntakeListItem], dependencies=[Depends(require_staff)])
 async def list_intakes(
     disease_context: str | None = Query(default=None),
+    flagged_only: bool = Query(default=False),
     limit: int = Query(default=50, le=200),
     offset: int = Query(default=0, ge=0),
     db: AsyncSession = Depends(get_db),
@@ -69,6 +71,8 @@ async def list_intakes(
     stmt = select(Intake).order_by(Intake.created_at.desc()).offset(offset).limit(limit)
     if disease_context:
         stmt = stmt.where(Intake.disease_context == disease_context)
+    if flagged_only:
+        stmt = stmt.where(Intake.flagged_for_review.is_(True))
     result = await db.execute(stmt)
     return list(result.scalars().all())
 

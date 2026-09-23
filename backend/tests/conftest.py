@@ -13,6 +13,7 @@ from sqlalchemy.pool import NullPool
 from app.config import get_settings
 from app.db import Base, get_db
 from app.main import app
+from app.rate_limit import limiter
 
 settings = get_settings()
 test_engine = create_async_engine(settings.database_url, poolclass=NullPool)
@@ -32,6 +33,7 @@ async def _reset_db():
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
+    limiter.reset()
     yield
 
 
@@ -54,7 +56,6 @@ def sample_submission():
         "visit_purpose": ["증상 상담"],
         "symptom_change": "나빠짐",
         "requested_consultation": "요즘 기억력이 더 나빠진 것 같아요",
-        "raw_input_text": "요즘 기억력이 더 나빠진 것 같아요",
         "document_type": [],
         "document_destination": [],
         "visit_type": "patient",

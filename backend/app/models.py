@@ -29,3 +29,4 @@ class Intake(Base):
     raw_answers: Mapped[dict] = mapped_column(JSONB)
     llm_model: Mapped[str | None] = mapped_column(String(50), nullable=True)
     fallback_used: Mapped[bool] = mapped_column(Boolean, default=False)
+    flagged_for_review: Mapped[bool] = mapped_column(Boolean, default=False)

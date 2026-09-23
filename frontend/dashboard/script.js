@@ -15,6 +15,7 @@ let offset = 0;
 let hasMore = true;
 let listError = null;
 let diseaseFilter = "";
+let flaggedOnly = false;
 let selectedDetail = null;
 let detailError = null;
 
@@ -48,6 +49,7 @@ async function loadList(append = false) {
   try {
     const params = new URLSearchParams({ limit: String(PAGE_SIZE), offset: String(offset) });
     if (diseaseFilter) params.set("disease_context", diseaseFilter);
+    if (flaggedOnly) params.set("flagged_only", "true");
     const res = await fetch(`${API_BASE}/api/intake?${params}`, { headers: authHeaders() });
     if (res.status === 401) {
       listError = "직원 코드가 올바르지 않습니다.";
@@ -144,6 +146,21 @@ function toolbarView() {
   });
   bar.appendChild(select);
 
+  const flagLabel = document.createElement("label");
+  flagLabel.className = "flag-filter";
+  const flagCheckbox = document.createElement("input");
+  flagCheckbox.type = "checkbox";
+  flagCheckbox.checked = flaggedOnly;
+  flagCheckbox.addEventListener("change", async () => {
+    flaggedOnly = flagCheckbox.checked;
+    offset = 0;
+    await loadList();
+    render();
+  });
+  flagLabel.appendChild(flagCheckbox);
+  flagLabel.appendChild(document.createTextNode(" 확인 필요만 보기"));
+  bar.appendChild(flagLabel);
+
   const refresh = document.createElement("button");
   refresh.type = "button";
   refresh.className = "btn btn-ghost";
@@ -183,6 +200,7 @@ function tableView() {
         <th>질환군</th>
         <th>방문 목적</th>
         <th>방문 형태</th>
+        <th>확인</th>
       </tr>
     </thead>
   `;
@@ -194,6 +212,7 @@ function tableView() {
       <td>${item.disease_context}</td>
       <td>${item.visit_purpose.join(", ") || "-"}</td>
       <td>${item.guardian_only ? '<span class="badge warn">보호자만</span>' : '<span class="badge">환자 내원</span>'}</td>
+      <td>${item.flagged_for_review ? '<span class="badge danger">⚠ 확인 필요</span>' : ""}</td>
     `;
     tr.addEventListener("click", () => openDetail(item.id));
     tbody.appendChild(tr);
@@ -220,7 +239,9 @@ function detailOverlay() {
     const d = selectedDetail;
     card.innerHTML = `
       <h2>${d.disease_context} 문진 상세</h2>
-      <p class="meta">${fmtDate(d.created_at)} · ${d.guardian_only ? "보호자만 내원" : "환자 내원"}</p>
+      <p class="meta">${fmtDate(d.created_at)} · ${d.guardian_only ? "보호자만 내원" : "환자 내원"}${
+        d.flagged_for_review ? ' · <span class="badge danger">⚠ 확인 필요</span>' : ""
+      }</p>
       ${detailRow("방문 목적", d.visit_purpose.join(", ") || "-")}
       ${detailRow("증상 변화", d.symptom_change || "-")}
       ${detailRow("필요 서류", d.document_type.join(", ") || "없음")}

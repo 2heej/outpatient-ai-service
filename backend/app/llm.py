@@ -82,7 +82,7 @@ def detect_risk(text: str) -> bool:
 
 
 def _free_text(submission: IntakeSubmission) -> str:
-    return " ".join(filter(None, [submission.requested_consultation, submission.raw_input_text])).strip()
+    return (submission.requested_consultation or "").strip()
 
 
 def _visit_type_label(submission: IntakeSubmission) -> str:

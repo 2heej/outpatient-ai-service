@@ -42,6 +42,13 @@ UI가 `visit_purpose`/`document_type`/`document_destination`/`symptom_change`/`v
 상한을 두고, 상한 초과나 API 실패 시 1차 `legacy_flask/app.py`의 위험 키워드 감지 패턴을 이어받은
 규칙 기반 요약으로 자동 대체합니다([backend/app/rate_limit.py](backend/app/rate_limit.py)).
 
+`/api/intake`는 인증 없이 누구나 호출 가능한 공개 엔드포인트이므로, `disease_context` 등
+UI가 실제로 보낼 수 있는 값만 Pydantic `Literal` enum으로 제한하고 자유서술 필드에는 길이
+제한을 뒀습니다([backend/app/schemas.py](backend/app/schemas.py)) — 위저드를 거치지 않은
+임의 입력이 그대로 LLM 프롬프트에 들어가거나 DB를 오염시키는 것을 막기 위함입니다. 위험 표현
+감지 결과는 `soap_summary` 텍스트에만 묻어두지 않고 `flagged_for_review` 컬럼으로 별도
+저장해 대시보드에서 배지/필터로 바로 보이게 했습니다.
+
 ## 저장소 구조
 
 ```
@@ -123,6 +130,22 @@ python3 -m http.server --directory frontend/dashboard 8613
 ```bash
 curl https://<backend-url>/api/health
 ```
+
+## 알려진 제약과 다음 단계
+
+포트폴리오 데모 범위에서 의도적으로 남겨둔 부분들입니다. 실제 서비스라면 다음이 필요합니다.
+
+- **직원 인증**: 직원 전체가 공유하는 코드 1개(`STAFF_ACCESS_CODE`)로 대시보드를 보호합니다.
+  실제로는 개별 계정 + 권한 관리가 필요합니다.
+- **레이트리밋 저장소**: `slowapi`의 인메모리 저장소를 사용해 인스턴스 재시작 시 초기화되고,
+  다중 인스턴스로 확장하면 인스턴스별로 따로 카운트됩니다. 실제 트래픽 규모라면 Redis 기반
+  저장소로 교체해야 합니다.
+- **일일 LLM 호출 상한**: UTC 자정 기준이라 한국 시간 자정과는 어긋납니다. 정밀한 리셋 시각이
+  중요하다면 타임존을 명시해야 합니다.
+- **무료 티어 콜드스타트**: Render 웹 서비스와 Supabase DB 모두 유휴 시 슬립되므로 첫 요청이
+  느릴 수 있습니다.
+- **`flagged_for_review`는 임상적 판단이 아닙니다**: 키워드 매칭 기반 안전장치일 뿐이며, 실제
+  중증도 분류(triage)를 대체하지 않습니다.
 
 ## 1차와의 관계
 

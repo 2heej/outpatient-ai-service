@@ -107,3 +107,54 @@ async def test_get_missing_intake_404(client, staff_headers):
         "/api/intake/00000000-0000-0000-0000-000000000000", headers=staff_headers
     )
     assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_rejects_disease_context_outside_allowed_values(client, sample_submission):
+    sample_submission["disease_context"] = "감기"
+    response = await client.post("/api/intake", json=sample_submission)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_rejects_visit_purpose_outside_allowed_values(client, sample_submission):
+    sample_submission["visit_purpose"] = ["무료 상담 부탁드립니다 <script>"]
+    response = await client.post("/api/intake", json=sample_submission)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_rejects_oversized_free_text(client, sample_submission):
+    sample_submission["requested_consultation"] = "가" * 5000
+    response = await client.post("/api/intake", json=sample_submission)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_risk_keyword_sets_flagged_for_review(client, sample_submission):
+    sample_submission["requested_consultation"] = "어제 낙상 이후로 한쪽 힘이 잘 안 들어가요"
+    response = await client.post("/api/intake", json=sample_submission)
+    assert response.status_code == 201
+    assert response.json()["flagged_for_review"] is True
+
+
+@pytest.mark.asyncio
+async def test_no_risk_keyword_leaves_unflagged(client, sample_submission):
+    response = await client.post("/api/intake", json=sample_submission)
+    assert response.status_code == 201
+    assert response.json()["flagged_for_review"] is False
+
+
+@pytest.mark.asyncio
+async def test_list_flagged_only_filter(client, sample_submission, staff_headers):
+    await client.post("/api/intake", json=sample_submission)
+
+    flagged_submission = dict(sample_submission)
+    flagged_submission["requested_consultation"] = "심한 두통이 계속돼요"
+    await client.post("/api/intake", json=flagged_submission)
+
+    response = await client.get("/api/intake", params={"flagged_only": "true"}, headers=staff_headers)
+    assert response.status_code == 200
+    items = response.json()
+    assert len(items) == 1
+    assert items[0]["flagged_for_review"] is True
