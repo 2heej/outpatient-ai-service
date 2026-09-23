@@ -80,9 +80,9 @@ const DOCUMENT_TYPE_OPTIONS = [
 const DOCUMENT_DEST_OPTIONS = ["보험", "직장/학교", "공공기관", "타 의료기관/요양기관", "개인 보관", "제출처 모름"];
 
 const VISIT_TYPE_OPTIONS = [
-  { value: "patient", icon: "🧍", label: "환자 본인이 오셨어요" },
-  { value: "both", icon: "🧑‍🤝‍🧑", label: "환자와 보호자가 함께 오셨어요" },
-  { value: "guardian_only", icon: "🧑‍🦽", label: "보호자만 오셨어요" },
+  { value: "patient", icon: "🧍", label: "환자 본인이 왔어요" },
+  { value: "both", icon: "🧑‍🤝‍🧑", label: "환자와 보호자가 함께 왔어요" },
+  { value: "guardian_only", icon: "🧑‍🦽", label: "보호자만 왔어요" },
 ];
 
 function needsSymptomScreen() {
